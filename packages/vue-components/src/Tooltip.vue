@@ -73,7 +73,7 @@ export default {
     .v-popper--theme-tooltip .v-popper__inner {
         /* following bootstrap */
         background: rgb(0 0 0 / 90%);
-        padding: 4px 8px;
+        padding: 20px 8px;
         font-size: 0.875rem;
         max-width: 200px;
         text-align: center;
