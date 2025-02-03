@@ -96,8 +96,13 @@ markdownIt.renderer.rules.fence = (tokens: Token[],
 
   const highlightLinesInput = getAttribute(token, 'highlight-lines', true);
   let highlightRules: HighlightRule[] = [];
+  // changed here
+  let color: string | null = null; // initialized to null
+
   if (highlightLinesInput) {
     highlightRules = HighlightRule.parseAllRules(highlightLinesInput, -startFromZeroBased, str);
+    // changed here
+    color = getAttribute(token, 'color') || null;
   }
 
   if (lang && hljs.getLanguage(lang)) {
@@ -160,7 +165,8 @@ markdownIt.renderer.rules.fence = (tokens: Token[],
       const { highlightType, bounds } = rules[i].getHighlightType(currentLineNumber);
 
       if (highlightType === HIGHLIGHT_TYPES.WholeLine) {
-        return Highlighter.highlightWholeLine(line);
+        // changed here
+        return Highlighter.highlightWholeLine(line, color);
       } else if (highlightType === HIGHLIGHT_TYPES.WholeText) {
         lineHighlightType = HIGHLIGHT_TYPES.WholeText;
       } else if (
@@ -173,10 +179,12 @@ markdownIt.renderer.rules.fence = (tokens: Token[],
     }
 
     if (lineHighlightType === HIGHLIGHT_TYPES.WholeText) {
-      return Highlighter.highlightWholeText(line);
+      // changed here
+      return Highlighter.highlightWholeText(line, color);
     }
 
-    return Highlighter.highlightPartOfText(line, rawBounds);
+    // changed here
+    return Highlighter.highlightPartOfText(line, rawBounds, color);
   }).join('');
 
   token.attrJoin('class', 'hljs');

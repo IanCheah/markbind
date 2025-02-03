@@ -8,16 +8,23 @@ export enum HIGHLIGHT_TYPES {
 
 export class HighlightRule {
   ruleComponents: HighlightRuleComponent[];
-  constructor(ruleComponents: HighlightRuleComponent[]) {
+  // changed here
+  color: string | null;
+  constructor(ruleComponents: HighlightRuleComponent[], color: string | null) { // changed here
     this.ruleComponents = ruleComponents;
+    // changed here
+    this.color = color;
   }
 
   static parseAllRules(allRules: string, lineOffset: number, tokenContent: string) {
     const highlightLines = this.splitByChar(allRules, ',');
     const strArray = tokenContent.split('\n');
     strArray.pop(); // removes the last empty string
+
+    const colorMatch = allRules.match(/color="([^"]+)"/);
+    const color = colorMatch ? colorMatch[1] : null;
     return highlightLines
-      .map(ruleStr => HighlightRule.parseRule(ruleStr, lineOffset, strArray))
+      .map(ruleStr => HighlightRule.parseRule(ruleStr, lineOffset, strArray, color)) // changed here
       .filter(rule => rule) as HighlightRule[]; // discards invalid rules
   }
 
@@ -42,17 +49,17 @@ export class HighlightRule {
     return highlightRules;
   }
 
-  static parseRule(ruleString: string, lineOffset: number, lines: string[]) {
+  static parseRule(ruleString: string, lineOffset: number, lines: string[], color: string | null) {
     const components = this.splitByChar(ruleString, '-')
-      .map(compString => HighlightRuleComponent.parseRuleComponent(compString, lineOffset, lines));
+      .map(compString => HighlightRuleComponent.parseRuleComponent(compString, lineOffset, lines, color)); // changed here
 
     if (components.some(c => !c)) {
       // Not all components are properly parsed, which means
       // the rule itself is not proper
       return null;
     }
-
-    return new HighlightRule(components as HighlightRuleComponent[]);
+    // changed here
+    return new HighlightRule(components as HighlightRuleComponent[], color);
   }
 
   shouldApplyHighlight(lineNumber: number) {
