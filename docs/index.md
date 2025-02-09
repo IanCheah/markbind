@@ -12,6 +12,31 @@
 Optimized for creating text-heavy websites %%e.g., eLearning websites, online instruction manuals, project documentation etc.%%
 </div>
 
+```java{highlight-lines="2,3, 6" .line-numbers}
+
+public class RandomNumberGenerator {
+    private int min;
+    private int max;
+
+    public RandomNumberGenerator(int min, int max) {
+        this.min = min;
+        this.max = max;
+    }
+
+    public int generate() {
+        return min + (int) (Math.random() * (max - min + 1));
+    }
+
+    public static void main(String[] args) {
+        RandomNumberGenerator rng = new RandomNumberGenerator(1, 100);
+        System.out.println("Random Number: " + rng.generate());
+    }
+}
+
+```
+
+
+
 <a class="btn btn-primary" href="userGuide/">Get Started</a>
 
 <hr>
